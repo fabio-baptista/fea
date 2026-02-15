@@ -1,20 +1,16 @@
-with
-    stg_addresses as (
-        select *
-        from {{ ref('stg_sap__addresses') }}
-    )
-    , stg_states as (
-        select *
-        from {{ ref('stg_sap__stateprovinces') }}
-    )
-    , joined as (
-        select
-            stg_addresses.pk_address as sk_local
-            , stg_addresses.nome_cidade
-            , stg_states.nome_estado
-            , stg_states.fk_country_region as codigo_pais
-        from stg_addresses
-        left join stg_states on stg_addresses.fk_state_province = stg_states.pk_state_province
-    )
+with addresses as (
+    select * from {{ ref('stg_adw__addresses') }}
+),
+stateprovinces as (
+    select * from {{ ref('stg_adw__stateprovinces') }}
+)
 
-select * from joined
+select
+    a.pk_address,
+    a.nome_cidade,
+    sp.pk_stateprovince,
+    sp.nome_estado,
+    sp.nome_pais
+from addresses a
+left join stateprovinces sp
+    on a.fk_stateprovince = sp.pk_stateprovince

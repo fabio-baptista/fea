@@ -1,18 +1,9 @@
-with
-    stg_salesreasons as (
-        select *
-        from {{ ref('stg_sap__salesreasons') }}
-    )
-    , stg_orderreasons as (
-        select *
-        from {{ ref('stg_sap__orderreasons') }}
-    )
-    , joined as (
-        select
-            stg_orderreasons.fk_sales_order
-            , stg_salesreasons.nome_motivo_venda
-        from stg_orderreasons
-        left join stg_salesreasons on stg_orderreasons.fk_sales_reason = stg_salesreasons.pk_sales_reason
-    )
+with reasons as (
+    select * from {{ ref('stg_adw__salesreasons') }}
+)
 
-select * from joined
+select
+    pk_salesreason,
+    nome_motivo_venda,
+    tipo_motivo_venda
+from reasons

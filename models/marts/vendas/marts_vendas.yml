@@ -1,0 +1,132 @@
+version: 2
+
+models:
+  - name: dim_clientes
+    description: "Dimensão de clientes."
+    columns:
+      - name: pk_customer
+        description: "Chave primária do cliente."
+        tests: [not_null, unique]
+      - name: nome_cliente
+        description: "Nome do cliente."
+
+  - name: dim_produtos
+    description: "Dimensão de produtos."
+    columns:
+      - name: pk_product
+        description: "Chave primária do produto."
+        tests: [not_null, unique]
+      - name: nome_produto
+        description: "Nome do produto."
+
+  - name: dim_locais
+    description: "Dimensão de localização (cidade/estado/país)."
+    columns:
+      - name: pk_address
+        description: "Chave primária do endereço."
+        tests: [not_null, unique]
+      - name: nome_cidade
+        description: "Cidade."
+      - name: nome_estado
+        description: "Estado/Província."
+      - name: nome_pais
+        description: "País."
+
+  - name: dim_cartoes
+    description: "Dimensão de cartões."
+    columns:
+      - name: pk_creditcard
+        description: "Chave primária do cartão."
+        tests: [not_null, unique]
+      - name: tipo_cartao
+        description: "Tipo do cartão."
+
+  - name: dim_motivos_vendas
+    description: "Dimensão de motivos de venda."
+    columns:
+      - name: pk_salesreason
+        description: "Chave primária do motivo de venda."
+        tests: [not_null, unique]
+      - name: nome_motivo_venda
+        description: "Nome do motivo."
+      - name: tipo_motivo_venda
+        description: "Tipo do motivo."
+
+  - name: bridge_pedido_motivo_venda
+    description: "Bridge de relacionamento N:N entre pedido e motivo."
+    columns:
+      - name: pk_salesorder
+        description: "Pedido."
+        tests: [not_null]
+      - name: pk_salesreason
+        description: "Motivo."
+        tests: [not_null]
+
+  - name: fct_vendas
+    description: "Fato de vendas com grão em item de pedido."
+    columns:
+      - name: sk_venda_item
+        description: "Chave técnica do item de venda."
+        tests: [not_null, unique]
+
+      - name: pk_salesorder
+        description: "Pedido."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_adw__salesorderheaders')
+                field: pk_salesorder
+
+      - name: fk_product
+        description: "Produto."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_produtos')
+                field: pk_product
+
+      - name: fk_customer
+        description: "Cliente."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_clientes')
+                field: pk_customer
+
+      - name: fk_address
+        description: "Endereço."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_locais')
+                field: pk_address
+
+      - name: fk_creditcard
+        description: "Cartão."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_cartoes')
+                field: pk_creditcard 
+              config:
+                where: "fk_creditcard is not null"
+                
+
+      - name: data_pedido
+        description: "Data do pedido."
+      - name: ano
+        description: "Ano da venda."
+      - name: mes
+        description: "Mês da venda."
+      - name: status_pedido
+        description: "Status do pedido."
+      - name: quantidade_pedida
+        description: "Quantidade de itens."
+      - name: valor_bruto_item
+        description: "Valor bruto do item (preço * quantidade)."
+      - name: valor_desconto_item
+        description: "Valor de desconto do item."
+      - name: valor_liquido_item
+        description: "Valor líquido do item."

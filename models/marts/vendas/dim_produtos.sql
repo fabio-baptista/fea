@@ -1,10 +1,8 @@
-with
-    stg_produtos as (
-        select *
-        from {{ ref('stg_sap__products') }}
-    )
+with products as (
+    select * from {{ ref('stg_adw__products') }}
+)
 
 select
-    pk_product as sk_produto -- sk significa Surrogate Key (Chave Substituta)
-    , nome_produto
-from stg_produtos
+    pk_product,
+    nome_produto
+from products

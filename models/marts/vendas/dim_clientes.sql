@@ -1,18 +1,15 @@
-with
-    stg_customers as (
-        select *
-        from {{ ref('stg_sap__customers') }}
-    )
-    , stg_persons as (
-        select *
-        from {{ ref('stg_sap__persons') }}
-    )
-    , joined as (
-        select
-            stg_customers.pk_customer as sk_cliente
-            , stg_persons.nome_pessoa as nome_cliente
-        from stg_customers
-        left join stg_persons on stg_customers.fk_person = stg_persons.pk_person
-    )
+with customers as (
+    select * from {{ ref('stg_adw__customers') }}
+),
+persons as (
+    select * from {{ ref('stg_adw__persons') }}
+)
 
-select * from joined
+select
+    c.pk_customer,
+    c.fk_person,
+    c.fk_store,
+    p.nome_completo as nome_cliente
+from customers c
+left join persons p
+    on c.fk_person = p.pk_person

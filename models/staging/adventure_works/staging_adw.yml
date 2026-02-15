@@ -1,0 +1,111 @@
+version: 2
+
+models:
+  - name: stg_adw__customers
+    description: "Clientes da Adventure Works (origem sales_customer)."
+    columns:
+      - name: pk_customer
+        description: "Chave primária do cliente."
+        tests: [not_null, unique]
+      - name: fk_person
+        description: "Chave para pessoa (person_person.businessentityid)."
+
+  - name: stg_adw__persons
+    description: "Pessoas da Adventure Works (origem person_person)."
+    columns:
+      - name: pk_person
+        description: "Chave primária da pessoa."
+        tests: [not_null, unique]
+      - name: nome_completo
+        description: "Nome completo da pessoa."
+
+  - name: stg_adw__products
+    description: "Produtos da Adventure Works."
+    columns:
+      - name: pk_product
+        description: "Chave primária do produto."
+        tests: [not_null, unique]
+      - name: nome_produto
+        description: "Nome do produto."
+
+  - name: stg_adw__addresses
+    description: "Endereços."
+    columns:
+      - name: pk_address
+        description: "Chave primária do endereço."
+        tests: [not_null, unique]
+      - name: fk_stateprovince
+        description: "Chave para estado/província."
+
+  - name: stg_adw__stateprovinces
+    description: "Estados/Províncias e país."
+    columns:
+      - name: pk_stateprovince
+        description: "Chave primária do estado/província."
+        tests: [not_null, unique]
+      - name: nome_estado
+        description: "Nome do estado/província."
+      - name: nome_pais
+        description: "Nome do país."
+
+  - name: stg_adw__creditcards
+    description: "Cartões de crédito."
+    columns:
+      - name: pk_creditcard
+        description: "Chave primária do cartão."
+        tests: [not_null, unique]
+      - name: tipo_cartao
+        description: "Tipo do cartão."
+
+  - name: stg_adw__salesorderheaders
+    description: "Cabeçalho de pedidos de venda."
+    columns:
+      - name: pk_salesorder
+        description: "Chave do pedido."
+        tests: [not_null, unique]
+      - name: fk_customer
+        description: "Cliente do pedido."
+      - name: fk_address
+        description: "Endereço de cobrança."
+      - name: fk_creditcard
+        description: "Cartão utilizado."
+      - name: data_pedido
+        description: "Data do pedido."
+        tests: [not_null]
+
+  - name: stg_adw__salesorderdetails
+    description: "Itens dos pedidos de venda."
+    columns:
+      - name: fk_salesorder
+        description: "Pedido do item."
+        tests: [not_null]
+      - name: fk_product
+        description: "Produto do item."
+        tests: [not_null]
+      - name: quantidade_pedida
+        description: "Quantidade do item."
+      - name: preco_unitario
+        description: "Preço unitário do item."
+      - name: desconto_unitario
+        description: "Desconto unitário (fração)."
+
+  - name: stg_adw__salesreasons
+    description: "Motivos de venda."
+    columns:
+      - name: pk_salesreason
+        description: "Chave do motivo de venda."
+        tests: [not_null, unique]
+      - name: nome_motivo_venda
+        description: "Nome do motivo."
+      - name: tipo_motivo_venda
+        description: "Tipo do motivo."
+
+  - name: stg_adw__orderreasons
+    description: "Relação pedido x motivo de venda (N:N)."
+    columns:
+      - name: fk_salesorder
+        description: "Pedido."
+        tests: [not_null]
+      - name: fk_salesreason
+        description: "Motivo."
+        tests: [not_null]

@@ -1,7 +1,7 @@
 with
     source_salesorderheader as (
         select *
-        from {{ source('sap_adw', 'sales_salesorderheader') }}
+        from {{ source('adw_raw', 'sales_salesorderheader') }}
     )
 
 select
