@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: fct_vendas
+    description: "Fato de vendas (grão: 1 linha por item do pedido)."
+    columns:
+      - name: sk_venda_item
+        description: "Chave técnica única do item de venda."
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_produtos
+    columns:
+      - name: pk_product
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_clientes
+    columns:
+      - name: pk_customer
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_locais
+    columns:
+      - name: pk_address
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_cartoes
+    columns:
+      - name: pk_creditcard
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_motivos_vendas
+    columns:
+      - name: pk_salesreason
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_pedidos
+    columns:
+      - name: pk_salesorder
+        tests:
+          - not_null
+          - unique

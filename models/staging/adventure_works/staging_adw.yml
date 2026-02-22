@@ -76,6 +76,9 @@ models:
   - name: stg_adw__salesorderdetails
     description: "Itens dos pedidos de venda."
     columns:
+      - name: pk_salesorderdetail
+        description: "Chave primária da linha do item (SalesOrderDetailID)."
+        tests: [not_null, unique]
       - name: fk_salesorder
         description: "Pedido do item."
         tests: [not_null]
