@@ -85,7 +85,7 @@ models:
       - name: fk_product
         description: "Produto do item."
         tests: [not_null]
-      - name: quantidade_pedida
+      - name: quantidade_pedida 
         description: "Quantidade do item."
       - name: preco_unitario
         description: "Preço unitário do item."
