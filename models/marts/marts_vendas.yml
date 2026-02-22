@@ -10,6 +10,57 @@ models:
           - not_null
           - unique
 
+      # === Relationships (FKs do fato -> PKs das dimensões) ===
+
+      - name: fk_product
+        description: "Produto da venda."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_produtos')
+                field: pk_product
+
+      - name: fk_customer
+        description: "Cliente associado ao pedido."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_clientes')
+                field: pk_customer
+
+      - name: fk_address
+        description: "Endereço de cobrança associado ao pedido (BillTo)."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_locais')
+                field: pk_address
+
+      - name: fk_creditcard
+        description: "Cartão utilizado no pedido."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_cartoes')
+                field: pk_creditcard
+
+      - name: pk_salesorder
+        description: "Identificador do pedido de venda (SalesOrderID)."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_pedidos')
+                field: pk_salesorder
+
+      # IMPORTANTE:
+      # Se o motivo de venda estiver modelado via bridge (N:N),
+      # o relationships de motivo deve ficar na bridge, não aqui no fato.
+      # Só crie fk_salesreason no fato se você realmente tiver essa coluna no fct_vendas.
+
   - name: dim_produtos
     description: "Dimensão de produtos."
     columns:
@@ -27,9 +78,15 @@ models:
         tests:
           - not_null
           - unique
+      - name: fk_person
+        description: "Chave para a pessoa associada ao cliente (Person.Person). Pode ser nulo quando o cliente é uma loja (Store)."
+      - name: fk_store
+        description: "Chave para a loja associada ao cliente (Store). Pode ser nulo quando o cliente é uma pessoa (Person)."
+      - name: nome_cliente
+        description: "Nome do cliente exibível para análise (derivado de Person quando existir; caso contrário, associado à Store)."
 
   - name: dim_locais
-    description: "Dimensão de locais/endereço."
+    description: "Dimensão de endereços/localidade (cidade/estado/país)."
     columns:
       - name: pk_address
         description: "Chave primária do endereço."
@@ -56,10 +113,10 @@ models:
           - unique
 
   - name: dim_pedidos
-    description: "Dimensão de pedidos (cabeçalho do pedido)."
+    description: "Dimensão de pedidos de venda."
     columns:
       - name: pk_salesorder
-        description: "Chave primária do pedido."
+        description: "Chave primária do pedido (SalesOrderID)."
         tests:
           - not_null
           - unique

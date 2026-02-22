@@ -2,76 +2,137 @@ version: 2
 
 sources:
   - name: adw_raw
-    description: "Fontes brutas (raw) do dataset AdventureWorks no Databricks."
+    description: "Camada raw do Adventure Works (tabelas físicas no Databricks)."
     database: fea_academy
     schema: adventure_works
 
     tables:
-      - name: sales_customer
-        description: "Tabela fonte de clientes (Customer)."
-        columns:
-          - name: customerid
-            description: "Identificador do cliente."
-
-      - name: person_person
-        description: "Tabela fonte de pessoas (Person)."
-        columns:
-          - name: businessentityid
-            description: "Identificador da pessoa (BusinessEntityID)."
-
       - name: production_product
-        description: "Tabela fonte de produtos (Product)."
+        description: "Produtos (Production.Product)."
         columns:
-          - name: productid
-            description: "Identificador do produto."
-
-      - name: person_address
-        description: "Tabela fonte de endereços (Address)."
-        columns:
-          - name: addressid
-            description: "Identificador do endereço."
-
-      - name: person_stateprovince
-        description: "Tabela fonte de estado/província (StateProvince)."
-        columns:
-          - name: stateprovinceid
-            description: "Identificador do estado/província."
-
-      - name: person_countryregion
-        description: "Tabela fonte de país/região (CountryRegion)."
-
-      - name: sales_creditcard
-        description: "Tabela fonte de cartões de crédito (CreditCard)."
-        columns:
-          - name: creditcardid
-            description: "Identificador do cartão de crédito."
+          - name: ProductID
+            description: "Chave primária do produto."
+            tests: [not_null, unique]
+          - name: Name
+            description: "Nome do produto."
 
       - name: sales_salesorderheader
-        description: "Tabela fonte de cabeçalho de pedidos de venda (SalesOrderHeader)."
+        description: "Cabeçalho do pedido de venda (Sales.SalesOrderHeader)."
         columns:
-          - name: salesorderid
-            description: "Identificador do pedido de venda."
+          - name: SalesOrderID
+            description: "Chave primária do pedido."
+            tests: [not_null, unique]
+          - name: CustomerID
+            description: "Cliente do pedido."
+            tests: [not_null]
+          - name: BillToAddressID
+            description: "Endereço de cobrança."
+          - name: CreditCardID
+            description: "Cartão de crédito usado."
+          - name: OrderDate
+            description: "Data do pedido."
+            tests: [not_null]
+          - name: Status
+            description: "Status do pedido."
 
       - name: sales_salesorderdetail
-        description: "Tabela fonte de itens do pedido de venda (SalesOrderDetail)."
+        description: "Itens do pedido de venda (Sales.SalesOrderDetail)."
         columns:
-          - name: salesorderdetailid
-            description: "Identificador do item do pedido (SalesOrderDetailID)."
-          - name: salesorderid
-            description: "Identificador do pedido de venda (SalesOrderID)."
-          - name: productid
-            description: "Identificador do produto (ProductID)."
+          - name: SalesOrderDetailID
+            description: "Chave primária do item do pedido."
+            tests: [not_null, unique]
+          - name: SalesOrderID
+            description: "Chave do pedido (FK para SalesOrderHeader)."
+            tests: [not_null]
+          - name: ProductID
+            description: "Produto vendido."
+            tests: [not_null]
+          - name: OrderQty
+            description: "Quantidade comprada."
+          - name: UnitPrice
+            description: "Preço unitário."
+          - name: UnitPriceDiscount
+            description: "Desconto unitário (fração)."
+
+      - name: sales_customer
+        description: "Clientes (Sales.Customer)."
+        columns:
+          - name: CustomerID
+            description: "Chave primária do cliente."
+            tests: [not_null, unique]
+          - name: PersonID
+            description: "Pessoa associada (FK para Person.Person)."
+          - name: StoreID
+            description: "Loja (se aplicável)."
+
+      - name: person_person
+        description: "Pessoas (Person.Person)."
+        columns:
+          - name: BusinessEntityID
+            description: "Chave primária da pessoa."
+            tests: [not_null, unique]
+          - name: FirstName
+            description: "Primeiro nome."
+          - name: LastName
+            description: "Último nome."
+
+      - name: person_address
+        description: "Endereços (Person.Address)."
+        columns:
+          - name: AddressID
+            description: "Chave primária do endereço."
+            tests: [not_null, unique]
+          - name: City
+            description: "Cidade."
+          - name: StateProvinceID
+            description: "Estado/Província (FK)."
+
+      - name: person_stateprovince
+        description: "Estados/Províncias (Person.StateProvince)."
+        columns:
+          - name: StateProvinceID
+            description: "Chave primária do estado/província."
+            tests: [not_null, unique]
+          - name: CountryRegionCode
+            description: "Código do país/região."
+          - name: Name
+            description: "Nome do estado/província."
+
+      - name: person_countryregion
+        description: "País/Região (Person.CountryRegion)."
+        columns:
+          - name: CountryRegionCode
+            description: "Código do país/região."
+            tests: [unique]
+          - name: Name
+            description: "Nome do país/região."
+
+      - name: sales_creditcard
+        description: "Cartões de crédito (Sales.CreditCard)."
+        columns:
+          - name: CreditCardID
+            description: "Chave primária do cartão."
+            tests: [not_null, unique]
+          - name: CardType
+            description: "Tipo do cartão."
 
       - name: sales_salesreason
-        description: "Tabela fonte de motivos de venda (SalesReason)."
+        description: "Motivos de venda (Sales.SalesReason)."
         columns:
-          - name: salesreasonid
-            description: "Identificador do motivo de venda (SalesReasonID)."
+          - name: SalesReasonID
+            description: "Chave primária do motivo de venda."
+            tests: [not_null, unique]
+          - name: Name
+            description: "Nome do motivo."
+          - name: ReasonType
+            description: "Tipo do motivo."
 
       - name: sales_salesorderheadersalesreason
-        description: "Tabela ponte pedido x motivo de venda (SalesOrderHeaderSalesReason)."
+        description: "Relação N:N entre pedido e motivo (Sales.SalesOrderHeaderSalesReason)."
         columns:
-          - name: salesorderid
-            description: "Identificador do pedido de venda (SalesOrderID)."
-          - name: salesreasonid
-            description: "Identificador do motivo de venda (SalesReasonID)."
+          - name: SalesOrderID
+            description: "Pedido."
+            tests: [not_null]
+          - name: SalesReasonID
+            description: "Motivo de venda."
+            tests: [not_null]
