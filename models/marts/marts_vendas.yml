@@ -11,43 +11,55 @@ models:
           - unique
 
   - name: dim_produtos
+    description: "Dimensão de produtos."
     columns:
       - name: pk_product
+        description: "Chave primária do produto."
         tests:
           - not_null
           - unique
 
   - name: dim_clientes
+    description: "Dimensão de clientes."
     columns:
       - name: pk_customer
+        description: "Chave primária do cliente."
         tests:
           - not_null
           - unique
 
   - name: dim_locais
+    description: "Dimensão de locais/endereço."
     columns:
       - name: pk_address
+        description: "Chave primária do endereço."
         tests:
           - not_null
           - unique
 
   - name: dim_cartoes
+    description: "Dimensão de cartões de crédito."
     columns:
       - name: pk_creditcard
+        description: "Chave primária do cartão."
         tests:
           - not_null
           - unique
 
   - name: dim_motivos_vendas
+    description: "Dimensão de motivos de venda."
     columns:
       - name: pk_salesreason
+        description: "Chave primária do motivo de venda."
         tests:
           - not_null
           - unique
 
   - name: dim_pedidos
+    description: "Dimensão de pedidos (cabeçalho do pedido)."
     columns:
       - name: pk_salesorder
+        description: "Chave primária do pedido."
         tests:
           - not_null
           - unique
