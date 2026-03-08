@@ -1,0 +1,150 @@
+version: 2
+
+sources:
+  - name: adw_raw
+    description: "Camada raw do Adventure Works (tabelas físicas no Databricks)."
+    database: fea_academy
+    schema: adventure_works
+
+    tables:
+      - name: production_product
+        description: "Produtos (Production.Product)."
+        columns:
+          - name: ProductID
+            description: "Chave primária do produto."
+            tests: [not_null, unique]
+          - name: Name
+            description: "Nome do produto."
+
+      - name: sales_salesorderheader
+        description: "Cabeçalho do pedido de venda (Sales.SalesOrderHeader)."
+        columns:
+          - name: SalesOrderID
+            description: "Chave primária do pedido."
+            tests: [not_null, unique]
+          - name: CustomerID
+            description: "Cliente do pedido."
+            tests: [not_null]
+          - name: BillToAddressID
+            description: "Endereço de cobrança."
+          - name: CreditCardID
+            description: "Cartão de crédito usado."
+          - name: OrderDate
+            description: "Data do pedido."
+            tests: [not_null]
+          - name: Status
+            description: "Status do pedido."
+          - name: SubTotal
+            description: "Subtotal do pedido."
+          - name: TaxAmt
+            description: "Valor do imposto."
+          - name: Freight
+            description: "Valor do frete."
+          - name: TotalDue
+            description: "Valor total devido."
+
+      - name: sales_salesorderdetail
+        description: "Itens do pedido de venda (Sales.SalesOrderDetail)."
+        columns:
+          - name: SalesOrderDetailID
+            description: "Chave primária do item do pedido."
+            tests: [not_null, unique]
+          - name: SalesOrderID
+            description: "Chave do pedido (FK para SalesOrderHeader)."
+            tests: [not_null]
+          - name: ProductID
+            description: "Produto vendido."
+            tests: [not_null]
+          - name: OrderQty
+            description: "Quantidade comprada."
+          - name: UnitPrice
+            description: "Preço unitário."
+          - name: UnitPriceDiscount
+            description: "Desconto unitário (fração)."
+
+      - name: sales_customer
+        description: "Clientes (Sales.Customer)."
+        columns:
+          - name: CustomerID
+            description: "Chave primária do cliente."
+            tests: [not_null, unique]
+          - name: PersonID
+            description: "Pessoa associada (FK para Person.Person)."
+          - name: StoreID
+            description: "Loja (se aplicável)."
+
+      - name: person_person
+        description: "Pessoas (Person.Person)."
+        columns:
+          - name: BusinessEntityID
+            description: "Chave primária da pessoa."
+            tests: [not_null, unique]
+          - name: FirstName
+            description: "Primeiro nome."
+          - name: MiddleName
+            description: "Nome do meio."
+          - name: LastName
+            description: "Último nome."
+          - name: PersonType
+            description: "Tipo de pessoa."
+
+      - name: person_address
+        description: "Endereços (Person.Address)."
+        columns:
+          - name: AddressID
+            description: "Chave primária do endereço."
+            tests: [not_null, unique]
+          - name: City
+            description: "Cidade."
+          - name: StateProvinceID
+            description: "Estado/Província (FK)."
+
+      - name: person_stateprovince
+        description: "Estados/Províncias (Person.StateProvince)."
+        columns:
+          - name: StateProvinceID
+            description: "Chave primária do estado/província."
+            tests: [not_null, unique]
+          - name: CountryRegionCode
+            description: "Código do país/região."
+          - name: Name
+            description: "Nome do estado/província."
+
+      - name: person_countryregion
+        description: "País/Região (Person.CountryRegion)."
+        columns:
+          - name: CountryRegionCode
+            description: "Código do país/região."
+            tests: [not_null, unique]
+          - name: Name
+            description: "Nome do país/região."
+
+      - name: sales_creditcard
+        description: "Cartões de crédito (Sales.CreditCard)."
+        columns:
+          - name: CreditCardID
+            description: "Chave primária do cartão."
+            tests: [not_null, unique]
+          - name: CardType
+            description: "Tipo do cartão."
+
+      - name: sales_salesreason
+        description: "Motivos de venda (Sales.SalesReason)."
+        columns:
+          - name: SalesReasonID
+            description: "Chave primária do motivo de venda."
+            tests: [not_null, unique]
+          - name: Name
+            description: "Nome do motivo."
+          - name: ReasonType
+            description: "Tipo do motivo."
+
+      - name: sales_salesorderheadersalesreason
+        description: "Relação N:N entre pedido e motivo (Sales.SalesOrderHeaderSalesReason)."
+        columns:
+          - name: SalesOrderID
+            description: "Pedido."
+            tests: [not_null]
+          - name: SalesReasonID
+            description: "Motivo de venda."
+            tests: [not_null]

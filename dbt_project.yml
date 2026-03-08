@@ -1,0 +1,36 @@
+name: 'adventure_works'
+version: '1.0.0'
+config-version: 2
+
+profile: 'default'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Opcional (só pra silenciar o warning do iceberg):
+# Se você NÃO está usando table_format: iceberg em nenhum lugar, pode remover este bloco sem problemas.
+flags:
+  use_managed_iceberg: true
+
+models:
+  adventure_works:
+    staging:
+      +materialized: view
+
+    marts:
+      +materialized: table
+
+      dimensions:
+        +schema: dim
+
+      facts:
+        +schema: fact
