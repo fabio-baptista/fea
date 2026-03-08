@@ -56,11 +56,6 @@ models:
                 to: ref('dim_pedidos')
                 field: pk_salesorder
 
-      # IMPORTANTE:
-      # Se o motivo de venda estiver modelado via bridge (N:N),
-      # o relationships de motivo deve ficar na bridge, não aqui no fato.
-      # Só crie fk_salesreason no fato se você realmente tiver essa coluna no fct_vendas.
-
   - name: dim_produtos
     description: "Dimensão de produtos."
     columns:
@@ -120,3 +115,34 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: agg_ticket_medio_mes
+    description: "Tabela agregada mensal com faturamento bruto, descontos, total negociado e ticket médio (total negociado / número de pedidos)."
+    columns:
+      - name: mes
+        description: "Mês de referência (primeiro dia do mês)."
+        tests:
+          - not_null
+
+      - name: numero_pedidos
+        description: "Quantidade de pedidos distintos no mês."
+        tests:
+          - not_null
+
+      - name: faturamento_bruto
+        description: "Soma do valor bruto dos itens no mês."
+        tests:
+          - not_null
+
+      - name: descontos
+        description: "Soma do valor de descontos dos itens no mês."
+        tests:
+          - not_null
+
+      - name: total_negociado
+        description: "Soma do valor líquido (bruto - descontos) no mês."
+        tests:
+          - not_null
+
+      - name: ticket_medio
+        description: "Ticket médio do mês: total negociado / número de pedidos."
