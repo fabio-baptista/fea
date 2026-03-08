@@ -1,0 +1,9 @@
+default:
+  outputs:
+    dev:
+      type: databricks
+      schema: default
+      host: dummy.databricks.com
+      http_path: /sql/1.0/endpoints/dummy
+      token: dummy_token
+  target: dev

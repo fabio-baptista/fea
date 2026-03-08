@@ -9,10 +9,10 @@ salesorderdetails as (
 )
 
 select
-    -- chave técnica do item de venda (grão: 1 linha por item do pedido)
+    -- Chave técnica do item de venda (grão: 1 linha por item do pedido)
     md5(cast(sd.pk_salesorderdetail as string)) as sk_venda_item,
 
-    -- chaves de negócio / relacionamento
+    -- Chaves de negócio / relacionamento
     sh.pk_salesorder,
     sd.pk_salesorderdetail,
     sd.fk_product,
@@ -20,22 +20,19 @@ select
     sh.fk_address,
     sh.fk_creditcard,
 
-    -- data e atributos analíticos
+    -- Atributos de tempo
     sh.data_pedido,
-    cast(sh.data_pedido as date) as data_pedido_date,   -- <- É AQUI que entra
+    cast(sh.data_pedido as date) as data_pedido_date,
     year(sh.data_pedido) as ano,
     month(sh.data_pedido) as mes,
     sh.status_pedido,
 
-    -- métricas base
+    -- Métricas base
     sd.quantidade_pedida,
     sd.preco_unitario,
     sd.desconto_unitario,
 
-    -- proteção contra NULL no desconto
-    coalesce(sd.desconto_unitario, 0) as desconto_unitario_tratado,
-
-    -- métricas calculadas (alta precisão; arredondar só na camada de consumo)
+    -- Métricas calculadas
     cast(sd.preco_unitario * sd.quantidade_pedida as decimal(19,6)) as valor_bruto_item,
     cast(sd.preco_unitario * coalesce(sd.desconto_unitario, 0) * sd.quantidade_pedida as decimal(19,6)) as valor_desconto_item,
     cast(sd.preco_unitario * (1 - coalesce(sd.desconto_unitario, 0)) * sd.quantidade_pedida as decimal(19,6)) as valor_liquido_item

@@ -34,6 +34,14 @@ sources:
             tests: [not_null]
           - name: Status
             description: "Status do pedido."
+          - name: SubTotal
+            description: "Subtotal do pedido."
+          - name: TaxAmt
+            description: "Valor do imposto."
+          - name: Freight
+            description: "Valor do frete."
+          - name: TotalDue
+            description: "Valor total devido."
 
       - name: sales_salesorderdetail
         description: "Itens do pedido de venda (Sales.SalesOrderDetail)."
@@ -73,8 +81,12 @@ sources:
             tests: [not_null, unique]
           - name: FirstName
             description: "Primeiro nome."
+          - name: MiddleName
+            description: "Nome do meio."
           - name: LastName
             description: "Último nome."
+          - name: PersonType
+            description: "Tipo de pessoa."
 
       - name: person_address
         description: "Endereços (Person.Address)."
