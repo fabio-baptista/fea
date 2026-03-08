@@ -115,7 +115,7 @@ sources:
         columns:
           - name: CountryRegionCode
             description: "Código do país/região."
-            tests: [unique]
+            tests: [not_null, unique]
           - name: Name
             description: "Nome do país/região."
 

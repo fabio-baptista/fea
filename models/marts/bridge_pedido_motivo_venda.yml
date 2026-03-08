@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: bridge_pedido_motivo_venda
+    description: "Tabela bridge para resolver o relacionamento N:N entre pedidos e motivos de venda."
+    columns:
+      - name: pk_salesorder
+        description: "ID do pedido de venda."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_pedidos')
+                field: pk_salesorder
+      - name: pk_salesreason
+        description: "ID do motivo de venda."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_motivos_vendas')
+                field: pk_salesreason

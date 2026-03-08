@@ -9,57 +9,63 @@ models:
         tests:
           - not_null
           - unique
-
-      # === Relationships (FKs do fato -> PKs das dimensões) ===
-
+      - name: pk_salesorder
+        description: "ID do pedido de venda."
+      - name: pk_salesorderdetail
+        description: "ID do detalhe do pedido."
       - name: fk_product
-        description: "Produto da venda."
+        description: "ID do produto."
         tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_produtos')
                 field: pk_product
-
       - name: fk_customer
-        description: "Cliente associado ao pedido."
+        description: "ID do cliente."
         tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_clientes')
                 field: pk_customer
-
       - name: fk_address
-        description: "Endereço de cobrança associado ao pedido (BillTo)."
+        description: "ID do endereço."
         tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_locais')
                 field: pk_address
-
       - name: fk_creditcard
-        description: "Cartão utilizado no pedido."
+        description: "ID do cartão."
         tests:
           - relationships:
               arguments:
                 to: ref('dim_cartoes')
                 field: pk_creditcard
-
-      - name: pk_salesorder
-        description: "Identificador do pedido de venda (SalesOrderID)."
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_pedidos')
-                field: pk_salesorder
-
-      # IMPORTANTE:
-      # Se o motivo de venda estiver modelado via bridge (N:N),
-      # o relationships de motivo deve ficar na bridge, não aqui no fato.
-      # Só crie fk_salesreason no fato se você realmente tiver essa coluna no fct_vendas.
+      - name: data_pedido
+        description: "Data e hora do pedido."
+      - name: data_pedido_date
+        description: "Data do pedido (formato date)."
+      - name: ano
+        description: "Ano do pedido."
+      - name: mes
+        description: "Mês do pedido."
+      - name: status_pedido
+        description: "Status do pedido."
+      - name: quantidade_pedida
+        description: "Quantidade pedida do item."
+      - name: preco_unitario
+        description: "Preço unitário do produto."
+      - name: desconto_unitario
+        description: "Desconto unitário aplicado."
+      - name: valor_bruto_item
+        description: "Valor bruto do item (quantidade * preço)."
+      - name: valor_desconto_item
+        description: "Valor do desconto do item."
+      - name: valor_liquido_item
+        description: "Valor líquido do item (bruto - desconto)."
 
   - name: dim_produtos
     description: "Dimensão de produtos."
@@ -69,6 +75,8 @@ models:
         tests:
           - not_null
           - unique
+      - name: nome_produto
+        description: "Nome do produto."
 
   - name: dim_clientes
     description: "Dimensão de clientes."
@@ -79,20 +87,28 @@ models:
           - not_null
           - unique
       - name: fk_person
-        description: "Chave para a pessoa associada ao cliente (Person.Person). Pode ser nulo quando o cliente é uma loja (Store)."
+        description: "ID da pessoa associada."
       - name: fk_store
-        description: "Chave para a loja associada ao cliente (Store). Pode ser nulo quando o cliente é uma pessoa (Person)."
+        description: "ID da loja associada."
       - name: nome_cliente
-        description: "Nome do cliente exibível para análise (derivado de Person quando existir; caso contrário, associado à Store)."
+        description: "Nome do cliente ou da loja."
 
   - name: dim_locais
-    description: "Dimensão de endereços/localidade (cidade/estado/país)."
+    description: "Dimensão de endereços/localidade."
     columns:
       - name: pk_address
         description: "Chave primária do endereço."
         tests:
           - not_null
           - unique
+      - name: nome_cidade
+        description: "Nome da cidade."
+      - name: pk_stateprovince
+        description: "ID do estado/província."
+      - name: nome_estado
+        description: "Nome do estado."
+      - name: nome_pais
+        description: "Nome do país."
 
   - name: dim_cartoes
     description: "Dimensão de cartões de crédito."
@@ -102,21 +118,45 @@ models:
         tests:
           - not_null
           - unique
+      - name: tipo_cartao
+        description: "Tipo do cartão (ex: Vista, SuperiorCard)."
 
   - name: dim_motivos_vendas
     description: "Dimensão de motivos de venda."
     columns:
       - name: pk_salesreason
-        description: "Chave primária do motivo de venda."
+        description: "Chave primária do motivo."
         tests:
           - not_null
           - unique
+      - name: nome_motivo_venda
+        description: "Nome do motivo."
+      - name: tipo_motivo_venda
+        description: "Tipo do motivo."
 
   - name: dim_pedidos
-    description: "Dimensão de pedidos de venda."
+    description: "Dimensão de pedidos de venda (nível cabeçalho)."
     columns:
       - name: pk_salesorder
-        description: "Chave primária do pedido (SalesOrderID)."
+        description: "Chave primária do pedido."
         tests:
           - not_null
           - unique
+      - name: data_pedido
+        description: "Data do pedido."
+      - name: fk_customer
+        description: "ID do cliente."
+      - name: fk_address
+        description: "ID do endereço de cobrança."
+      - name: fk_creditcard
+        description: "ID do cartão utilizado."
+      - name: status_pedido
+        description: "Status do pedido."
+      - name: subtotal_valor
+        description: "Subtotal do pedido."
+      - name: imposto_valor
+        description: "Valor do imposto."
+      - name: frete_valor
+        description: "Valor do frete."
+      - name: total_valor
+        description: "Valor total do pedido."
